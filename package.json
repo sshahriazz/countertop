@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "pnpm run --parallel dev"
+    "dev:web": "pnpm run --filter=web dev",
+    "dev:server": "pnpm run --filter=server dev"
   },
   "keywords": [],
   "author": "",
