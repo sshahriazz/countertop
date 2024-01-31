@@ -4,6 +4,10 @@ import styles from "./page.module.css";
 export default function Home() {
   return (
     <main className={styles.main}>
+      <video autoPlay loop muted>
+      <source src="/path/to/your/video.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
       {/* <div className={styles.description}>
         <p>
           Get started by editing&nbsp;

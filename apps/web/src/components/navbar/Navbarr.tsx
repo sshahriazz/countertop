@@ -7,7 +7,11 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const menuItems = [
-    'Products', 'Integrations', 'About', 'Contact', 'Login'
+    { 'name': 'Products', 'path': '/products' },
+    { 'name': 'Integrations', 'path': '/integrations' },
+    { 'name': 'About', 'path': '/about' },
+    { 'name': 'Contact', 'path': '/contact' },
+    { 'name': 'Login', 'path': '/login' },
   ];
 
   return (
@@ -16,19 +20,18 @@ export default function App() {
         <NavbarMenuToggle aria-label={isMenuOpen ? "Close menu" : "Open menu"} />
       </NavbarContent>
 
+
+
       <NavbarContent>
         <NavbarBrand>
-          <a href='#' className='font-bold lg:text-lg text-base py-2 px-4 items-center text-white md:text-black'>AbsoluteGM</a>
+          <a href='/' className='font-bold lg:text-lg text-base py-2 px-4 items-center text-white md:text-black'>AbsoluteGM</a>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent className=" sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <div className="hidden  sm:flex gap-x-7">
-            {menuItems.map((item, index) => (<a href="#" className={index == 0 ? "bg-[#F4F4F4] rounded-md  px-4 py-3 text-xs  font-medium  text-[#3D6083]" : "rounded-md  px-4 py-3 text-xs  font-medium  text-[#090909]"}>{item}</a>
-            ))}
-          </div>
-
+        <NavbarItem isActive className="hidden  sm:flex gap-x-7" >
+          {menuItems.map((item, index) => (<Link href={item.path} className={index==0?"bg-[#F4F4F4] rounded-md  px-4 py-3 text-xs outline-none  font-medium  text-[#3D6083]" : "rounded-md  px-4 py-3 text-xs  font-medium outline-none  text-[#090909]"}>{item.name}</Link>
+          ))}
         </NavbarItem>
       </NavbarContent>
 
@@ -99,7 +102,7 @@ export default function App() {
               href="#"
               size="lg"
             >
-              {item}
+              {item.name}
             </Link>
           </NavbarMenuItem>
         ))}

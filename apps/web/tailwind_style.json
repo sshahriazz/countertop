@@ -7,10 +7,15 @@
       "xss": ["0.625rem", "0.75rem"],
       "xs": ["0.75rem", "1.25rem"],
       "sm": ["0.938rem", "1.5rem"],
-      "base": ["1rem", "1.22rem"],
-      "md": ["1.125rem", "1.35rem"],
-      "lg": ["1.25rem", "1.5rem"],
-      "xl": ["1.5rem", "1.8rem"]
+      "md": ["1rem", "1.25rem"],
+      "lg": ["1.063rem", "1.5rem"],
+      "xl": ["1.5rem", "1.8rem"],
+      "h6":["1.125rem", "1.5rem"],
+      "h5":["1.313rem", "1.75rem"],
+      "h4":["1.75rem", "1.75rem"],
+      "h3":["2.25rem", "2.75rem"],
+      "h2":["2.75rem", "3.256rem"],
+      "h1":["3.5rem", "3.75rem"]
     },
     "radius": {
       "tiny": "8px",
@@ -68,9 +73,9 @@
           "cream": "#f6f6f6",
           "orange": "#f4d3c3"  
         },
-        "quarternary": {
+        "bg": {
           "DEFAULT": "#FFA51F",
-          "100": "#FFF5E5",
+          "topnavba": "#FFF5E5",
           "200": "#FFE1B4",
           "300": "#FFD28F",
           "400": "#FFC36A",
