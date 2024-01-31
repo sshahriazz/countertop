@@ -23,7 +23,7 @@ export default function RootLayout({
         
 
           <div className=''>
-            <div className='sticky top-0  bg-white '>
+            <div className= 'sticky top-0  md:bg-white bg-grey-800 '>
               <Navbarr/>
             </div>
           </div>
