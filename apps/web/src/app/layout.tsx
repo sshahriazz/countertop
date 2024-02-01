@@ -18,20 +18,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className='max-w-[1440px] mx-auto'>
+      <body className=''>
         <div>
-        
-
           <div className=''>
             <div className= 'sticky top-0  md:bg-white bg-grey-800 '>
               <Navbarr/>
             </div>
           </div>
         </div>
-        <div className='md:pl-[256px]'>
-          <div className='md:px-8'>
+        <div className=''>
+          <div className=''>
             <Providers>
-              <div className='px-3 md:px-0 pb-24'>
+              <div className=''>
                 {children}
               </div>
             </Providers>
