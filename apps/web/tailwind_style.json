@@ -1,27 +1,38 @@
 {
     "fontFamily": {
-      "mulish": ["Mulish", "sans-serif"],
-      "jakarta": ["Plus Jakarta Sans", "sans-serif"]
+      "sf": ["SF Pro Display","sans-serif"]
     },
     "fontSize": {
-      "xss": ["0.625rem", "0.75rem"],
-      "xs": ["0.75rem", "1.25rem"],
+       "xs-medium": ["0.75rem", {
+        "lineHeight": "1.25rem",
+        "letterSpacing": "0.007rem",
+        "fontWeight": "500"
+      }],
       "sm": ["0.938rem", "1.5rem"],
       "md": ["1rem", "1.25rem"],
       "lg": ["1.063rem", "1.5rem"],
       "xl": ["1.5rem", "1.8rem"],
-      "h6":["1.125rem", "1.5rem"],
-      "h5":["1.313rem", "1.75rem"],
-      "h4":["1.75rem", "1.75rem"],
-      "h3":["2.25rem", "2.75rem"],
-      "h2":["2.75rem", "3.256rem"],
-      "h1":["3.5rem", "3.75rem"]
+      "2xl":["1.125rem", "1.5rem"],
+      "3xl":["1.313rem", "1.75rem"],
+      "4xl":["1.75rem", "1.75rem"],
+      "5xl":["2.25rem", "2.75rem"],
+      "6xl":["2.75rem", "3.256rem"],
+      "7xl":["3.5rem", "3.75rem"]
     },
     "radius": {
       "tiny": "8px",
       "small": "10px",
       "medium": "12px",
       "large": "16px"
+    },
+     "letterSpacing": {
+      "tightest": "-.075em",
+      "tighter": "-.05em",
+      "tight": "-.025em",
+      "normal": "0",
+      "wide": ".025em",
+      "wider": ".05em",
+      "widest": ".25em"
     },
     "borderWidth": {
       "small": "1px",
