@@ -2,7 +2,7 @@
 
 import { NextUIProvider } from '@nextui-org/react'
 
-const Providers = ({ children}:any) => {
+const Providers = ({ children }: { children: React.ReactNode }) => {
     return (
         <NextUIProvider>
             {children}

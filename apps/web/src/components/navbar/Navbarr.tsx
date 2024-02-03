@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { menuItems } from './data'
 import BagIcon from '../../../public/assets/icons/bag'
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import SearchIcon from '../../../public/assets/icons/search'
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import ProfileImage from '../../../public/assets/images/profile.png'
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@nextui-org/react";
 
@@ -14,10 +14,10 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
 
   return (
-    <Navbar onMenuOpenChange={setIsMenuOpen} className="h-11 max-w-[980px] mx-auto">
+    <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarBrand>
-          <div className="text-neutral-100 text-xl font-bold">AbsoluteGM</div>
+          <div className="text-neutral-100 text-[20px] font-bold">AbsoluteGM</div>
         </NavbarBrand>
       </NavbarContent>
 
@@ -83,14 +83,22 @@ export default function App() {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           icon={
-            <Bars3Icon
-              className='w-6 text-neutral-100'
-              aria-hidden='true'
-            />}
+            isMenuOpen ?
+              <Bars3Icon
+                className='w-6 text-neutral-100'
+                aria-hidden='true'
+                strokeWidth={1}
+              />
+              :
+              <XMarkIcon
+                className='w-6 text-neutral-100'
+                aria-hidden='true'
+                strokeWidth={1}
+              />}
         />
       </NavbarContent>
 
-      <NavbarMenu className="bg-neutral-600 flex flex-col gap-4 px-4 pt-6">
+      <NavbarMenu className="bg-neutral-600 flex flex-col gap-4 px-4 pt-6 w-full z-40">
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item}-${index}`}>
             <Link
