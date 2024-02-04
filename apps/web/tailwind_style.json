@@ -8,17 +8,88 @@
         "letterSpacing": "0.007rem",
         "fontWeight": "500"
       }],
-      "sm": ["0.938rem", "1.5rem"],
-      "md": ["1rem", "1.25rem"],
-      "lg": ["1.063rem", "1.5rem"],
-      "xl": ["1.5rem", "1.8rem"],
-      "2xl":["1.125rem", "1.5rem"],
-      "3xl":["1.313rem", "1.75rem"],
-      "4xl":["1.75rem", "1.75rem"],
-      "5xl":["2.25rem", "2.75rem"],
-      "6xl":["2.75rem", "3.256rem"],
-      "7xl":["3.5rem", "3.75rem"]
+      "xs-bold": ["0.75rem", {
+        "lineHeight": "1.25rem",
+        "letterSpacing": "0.007rem",
+        "fontWeight": "700"
+      }],
+      "xs-regular": ["0.75rem", {
+        "lineHeight": "1.25rem",
+        "letterSpacing": "0.007rem",
+        "fontWeight": "400"
+      }],
+      "sm-bold": ["0.9375rem", {
+        "lineHeight": "1.75rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "700"
+      }],
+      "sm-regular": ["0.9375rem", {
+        "lineHeight": "1.75rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "400"
+      }],
+      "sm-semibold": ["0.9375rem", {
+        "lineHeight": "1.25rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "600"
+      }],
+      "md-semibold": ["1rem", {
+        "lineHeight": "1.25rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "600"
+      }],
+      "md-regular": ["1rem", {
+        "lineHeight": "1.5rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "400"
+      }],
+      "lg-semibold": ["1.0625rem", {
+        "lineHeight": "1.5rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "600"
+      }],
+      "lg-regular": ["1.0625rem", {
+        "lineHeight": "1.5rem",
+        "letterSpacing": "0.014375rem",
+        "fontWeight": "400"
+      }],
+      "h6-semibold": ["1.125rem", {
+        "lineHeight": "1.5rem",
+        "letterSpacing": "0.01375rem",
+        "fontWeight": "600"
+      }],
+      "h5-semibold": ["1.3125rem", {
+        "lineHeight": "1.75rem",
+        "letterSpacing": "0.01375rem",
+        "fontWeight": "600"
+      }],
+      "h4-regular": ["1.75rem", {
+        "lineHeight": "1.75rem",
+        "letterSpacing": "0.01375rem",
+        "fontWeight": "400"
+      }],
+      "h4-semibold": ["1.3125rem", {
+        "lineHeight": "1.75rem",
+        "letterSpacing": "0.01375rem",
+        "fontWeight": "600"
+      }],
+      "h3-semibold": ["2.25rem", {
+        "lineHeight": "2.75rem",
+        "letterSpacing": "-0.00875rem",
+        "fontWeight": "600"
+      }],
+      "h2-semibold": ["2.75rem", {
+        "lineHeight": "3.250625rem",
+        "letterSpacing": "-0.00875rem",
+        "fontWeight": "600"
+      }],
+      "h1-bold": ["3.5rem", {  
+        "lineHeight": "3.75rem",
+        "letterSpacing": "0.0175rem",
+        "fontWeight": "700"
+      }]
     },
+
     "radius": {
       "tiny": "8px",
       "small": "10px",

@@ -1,13 +1,4 @@
-import porcelainBg from '../../public/assets/images/porcelain-bg.png'
-import quartzBg from '../../public/assets/images/quartz.png'
-import sinteredBg from '../../public/assets/images/sinteredStone.png'
-import BackgroundImageWithTitle from "../components/home/bgImageWithTitle/page";
-
-
-
-export default function Home() {
-
-  const sectionInfo = [
+export const sectionInfo = [
     {
       "title": "The Finest Countertop Makers",
       "description": "With a rich legacy spanning two decades",
@@ -43,11 +34,3 @@ export default function Home() {
       "btn2": "AI Assistant"
     },
   ]
-  return (
-    <main>
-      {sectionInfo.map((item, index) => (
-        <BackgroundImageWithTitle item={item} />
-      ))}
-    </main>
-  );
-}

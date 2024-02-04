@@ -17,7 +17,7 @@ export default function App() {
     <Navbar onMenuOpenChange={setIsMenuOpen}>
       <NavbarContent>
         <NavbarBrand>
-          <div className="text-neutral-100 text-[20px] font-bold">AbsoluteGM</div>
+          <Link href="/" className="text-neutral-100 text-[20px] font-bold">AbsoluteGM</Link>
         </NavbarBrand>
       </NavbarContent>
 
