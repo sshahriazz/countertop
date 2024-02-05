@@ -1,12 +1,13 @@
+'use client'
+import { useEffect,useRef } from 'react';
+import {useScroll} from 'framer-motion';
 import porcelainBg from '../../public/assets/images/porcelain-bg.png'
 import quartzBg from '../../public/assets/images/quartz.png'
 import sinteredBg from '../../public/assets/images/sinteredStone.png'
 import BackgroundImageWithTitle from "../components/home/bgImageWithTitle/page";
-
-
+import { Button } from '@nextui-org/react';
 
 export default function Home() {
-
   const sectionInfo = [
     {
       "title": "The Finest Countertop Makers",
@@ -45,9 +46,11 @@ export default function Home() {
   ]
   return (
     <main>
+      <div className='snap-y h-screen overflow-y-scroll  snap-mandatory'>
       {sectionInfo.map((item, index) => (
-        <BackgroundImageWithTitle item={item} />
+          <BackgroundImageWithTitle item={item} />
       ))}
+      </div>
     </main>
   );
 }
