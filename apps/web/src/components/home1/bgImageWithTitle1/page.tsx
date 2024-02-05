@@ -1,28 +1,14 @@
-"use client";
-import { Button } from "@nextui-org/react";
+import React, { useState } from "react";
+// import "../../assets/styles/swiper-react.css";
 import Image from "next/image";
-import React, { useEffect, useRef, useState } from "react";
-import { useScroll } from "framer-motion";
-import { Swiper, SwiperSlide } from "swiper/react";
+import { Button } from "@nextui-org/react";
 
-function BackgroundImageWithTitle({ item }: any) {
-  const [Percect, setPercent] = useState(0);
-  const element = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: element,
-    offset: ["start end", "start start"],
-  });
-
-  useEffect(() => {
-    scrollYProgress.on("change", (e) => setPercent(e));
-  }, []);
-
-  console.log(Percect);
-
+function BackgroundImageWithTitle1({item}:any) {
+ 
   return (
     <section className="relative">
       {item.img ? (
-        <div ref={element}>
+        <div>
           <div className="bg-black h-full w-full bg-opacity-50 absolute"></div>
           <div>
             <Image
@@ -55,7 +41,8 @@ function BackgroundImageWithTitle({ item }: any) {
                         </div>
                     </div>
     </section>
+   
   );
 }
 
-export default BackgroundImageWithTitle;
+export default BackgroundImageWithTitle1;
