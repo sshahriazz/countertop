@@ -1,21 +1,21 @@
 import CommonEntity from '@server/common/configs/common-entity';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 
-@Entity('permission')
-export class PermissionEntity extends CommonEntity {
-  @Column({ type: 'varchar', unique: true })
-  name: string;
-}
+// @Entity('permission')
+// export class PermissionEntity extends CommonEntity {
+//   @Column({ type: 'varchar', unique: true })
+//   name: string;
+// }
 
-@Entity('role')
-export class RoleEntity extends CommonEntity {
-  @Column({ type: 'varchar', unique: true })
-  name: string;
+// @Entity('role')
+// export class RoleEntity extends CommonEntity {
+//   @Column({ type: 'varchar', unique: true })
+//   name: string;
 
-  @ManyToMany(() => PermissionEntity, { eager: true })
-  @JoinTable()
-  permissions: PermissionEntity[];
-}
+//   @ManyToMany(() => PermissionEntity, { eager: true })
+//   @JoinTable()
+//   permissions: PermissionEntity[];
+// }
 
 @Entity('user')
 export class UserEntity extends CommonEntity {
@@ -25,9 +25,8 @@ export class UserEntity extends CommonEntity {
   @Column({ type: 'varchar', nullable: true })
   phone: string;
 
-  @ManyToMany(() => RoleEntity, { eager: true })
-  @JoinTable()
-  roles: RoleEntity[];
+  @Column({ type: 'varchar', nullable: true })
+  roles: string[];
 
   @Column({ type: 'varchar', nullable: true })
   firstname?: string;

@@ -43,6 +43,7 @@ const config: Config = {
     bcryptSaltOrRound: 10,
     refreshSecret: 'my-refresh-secret',
     accessSecret: 'my-access-secret',
+    jwtSecret: 'my-jwt-secret',
   },
 };
 

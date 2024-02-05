@@ -55,6 +55,7 @@ export interface SecurityConfig {
   bcryptSaltOrRound: string | number;
   refreshSecret: string;
   accessSecret: string;
+  jwtSecret: string;
 }
 
 export class ApiResponse<T> {
