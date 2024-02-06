@@ -1,34 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+
+import { PrismaService } from 'nestjs-prisma';
+import { type User, type Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async updateUser(user: UpdateUserDto) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = await this.userRepository.save(user);
-    return rest;
+  async updateUser(
+    userId: string,
+    user: Prisma.UserUpdateInput,
+  ): Promise<User | null> {
+    return await this.prismaService.user.update({
+      where: { id: userId },
+      data: user,
+    });
   }
   async deleteUser(id: string) {
-    const user = this.userRepository.findOne({ where: { id } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    await this.userRepository.delete(id);
-
-    return this.userRepository.delete(id);
+    return await this.prismaService.user.delete({ where: { id: id } });
   }
 
-  async findUser(id: string): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({ where: { id } });
+  async findUser(id: string): Promise<User> {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }

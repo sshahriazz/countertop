@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { UserEntity } from '../entities/user.entity';
+import { Prisma } from '@prisma/client';
 
-export class UpdateUserDto implements Partial<UserEntity> {
+export class UpdateUserDto implements Partial<Prisma.UserUpdateInput> {
   @ApiPropertyOptional({ type: Boolean, description: 'Disable access' })
   disableAccess?: boolean | undefined;
   @ApiPropertyOptional({ type: String, description: 'User email' })

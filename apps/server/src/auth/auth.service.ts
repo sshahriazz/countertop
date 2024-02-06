@@ -1,22 +1,21 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
+
 import { SecurityConfig } from '@server/common/configs/config.interface';
-import { UserEntity } from '@server/user/entities/user.entity';
-import { UserService } from '@server/user/user.service';
-import { Repository } from 'typeorm';
+
 import { hash, compare } from 'bcrypt';
 import { JWTPayload } from '@server/common/types/api';
+import { TypedEventEmitter } from '@server/event-emitter/typed-event-emitter.class';
+import { PrismaService } from 'nestjs-prisma';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-    private readonly userService: UserService,
+    private readonly prismaService: PrismaService,
+    private readonly eventEmitter: TypedEventEmitter,
   ) {}
 
   async login(email: string, password: string) {
@@ -43,8 +42,8 @@ export class AuthService {
       userId: existingUser.id,
       email: existingUser.email,
       role: ['user'],
-      firstname: existingUser.firstname,
-      lastname: existingUser.lastname,
+      firstname: existingUser.firstname!,
+      lastname: existingUser.lastname!,
     };
 
     const accessToken = await this.generateAccessToken(payload);
@@ -78,10 +77,11 @@ export class AuthService {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...user } = await this.userRepository.save({
-        email,
-        password: hashedPassword,
-        roles: ['user'],
+      const { password, ...user } = await this.prismaService.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+        },
       });
 
       // const { password, ...user } = await this.userRepository.save(createUser);
@@ -89,12 +89,23 @@ export class AuthService {
         userId: user.id,
         email: user.email,
         role: ['user'],
-        firstname: user.firstname,
-        lastname: user.lastname,
+        firstname: user.firstname!,
+        lastname: user.lastname!,
       };
 
       const accessToken = await this.generateAccessToken(payload);
       const refreshToken = await this.generateRefreshToken(payload);
+
+      this.eventEmitter.emit('user.welcome', {
+        name: 'Bhagyajit Jagdev',
+        email: payload.email,
+      });
+
+      this.eventEmitter.emit('user.verify-email', {
+        name: 'Bhagyajit Jagdev',
+        email: payload.email,
+        otp: '****', // generate a random OTP
+      });
 
       return { user, tokens: { accessToken, refreshToken } };
     } catch (error) {
@@ -103,7 +114,7 @@ export class AuthService {
   }
 
   async validateUser(email: string) {
-    const user = await this.userRepository.findOne({ where: { email } });
+    const user = await this.prismaService.user.findUnique({ where: { email } });
     if (user) {
       return user;
     }

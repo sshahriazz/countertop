@@ -1,7 +1,7 @@
-import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserResponseDto } from './dto/user-response.dto';
+import { User } from '@prisma/client';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
 @ApiTags('user')
@@ -9,8 +9,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get(':id')
-  @ApiResponse({ type: UserResponseDto, status: HttpStatus.OK })
-  async findUser(@Param('id') id: string): Promise<UserResponseDto> {
+  async findUser(@Param('id') id: string): Promise<User> {
     return await this.userService.findUser(id);
   }
 }

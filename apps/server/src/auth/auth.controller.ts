@@ -39,7 +39,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const authState = await this.authService.register(
-      loginDto.email,
+      loginDto.email.toLowerCase(),
       isOauth === 'true',
       loginDto.password,
     );
@@ -79,7 +79,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const authState = await this.authService.login(
-      loginDto.email,
+      loginDto.email.toLowerCase(),
       loginDto.password,
     );
 
