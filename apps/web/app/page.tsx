@@ -43,10 +43,10 @@ export default function Home() {
 	];
 
 	return (
-		<section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
-			<div className="inline-block max-w-lg text-center justify-center">
-				dd
-			</div>
-		</section>
+		<div className="snap-y h-screen overflow-y-scroll  snap-mandatory">
+			{sectionInfo.map((item, index) => (
+				<BackgroundImageWithTitle key={index} item={item} />
+			))}
+		</div>
 	);
 }
