@@ -20,8 +20,8 @@ export const Navbar = () => {
 	return (
 		<NextUINavbar maxWidth="xl" position="sticky" as='div'
 			classNames={{
-				base: 'bg-transparent',
-				wrapper: "px-4 sm:px-0 flex justify-between items-center",
+				base: 'bg-transparent mb-0 flex justify-between items-center',
+				wrapper: "px-4 sm:px-0 ",
 			}}>
 			<NavbarContent className="" justify="start">
 				<NavbarBrand>
@@ -93,24 +93,14 @@ export const Navbar = () => {
 
 			<NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
 				<ThemeSwitch />
-				<NavbarMenuToggle />
+				<NavbarMenuToggle className="text-neutral-100" />
 			</NavbarContent>
 
 			<NavbarMenu>
 				<div className="mx-4 mt-2 flex flex-col gap-2">
 					{siteConfig.navItems.map((item, index) => (
 						<NavbarMenuItem key={`${item}-${index}`}>
-							<Link
-								color={
-									index === 2
-										? "primary"
-										: index === siteConfig.navItems.length - 1
-											? "danger"
-											: "foreground"
-								}
-								href="#"
-								size="lg"
-							>
+							<Link href={item.href} size="lg" className="text-neutral-800">
 								{item.label}
 							</Link>
 						</NavbarMenuItem>

@@ -1,5 +1,5 @@
 import quartzBg from "@web/public/assets/images/quartz.png";
-import BackgroundImageWithTitle from "@web/components/home/page";
+import BackgroundImageWithTitle from "@web/components/home/background-image-with-title/page";
 import porcelainBg from "@web/public/assets/images/porcelain-bg.png";
 import sinteredBg from "@web/public/assets/images/sinteredStone.png";
 
@@ -43,7 +43,7 @@ export default function Home() {
 	];
 
 	return (
-		<div className="snap-y h-screen overflow-y-scroll  snap-mandatory">
+		<div className="snap-y h-screen overflow-y-scroll snap-mandatory">
 			{sectionInfo.map((item, index) => (
 				<BackgroundImageWithTitle key={index} item={item} />
 			))}
