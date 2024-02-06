@@ -22,28 +22,28 @@ export class AuthService {
     const validateEmail = await this.validateEmail(email);
 
     if (typeof validateEmail === 'string') {
-      return new HttpException(validateEmail, HttpStatus.BAD_REQUEST);
+      throw new HttpException(validateEmail, HttpStatus.BAD_REQUEST);
     }
 
     const existingUser = await this.validateUser(email);
 
     if (!existingUser) {
-      return new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
     const { password: pass, ...rest } = existingUser;
     const isPasswordMatching = await compare(password, pass);
 
     if (!isPasswordMatching) {
-      return new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Invalid credentials', HttpStatus.BAD_REQUEST);
     }
 
     const payload: JWTPayload = {
       userId: existingUser.id,
       email: existingUser.email,
       role: ['user'],
-      firstname: existingUser.firstname!,
-      lastname: existingUser.lastname!,
+      firstname: existingUser.first_name!,
+      lastname: existingUser.last_name!,
     };
 
     const accessToken = await this.generateAccessToken(payload);
@@ -56,13 +56,13 @@ export class AuthService {
     const existingUser = await this.validateUser(email);
 
     if (existingUser) {
-      return new HttpException('User already exists', HttpStatus.CONFLICT);
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
 
     const validateEmail = await this.validateEmail(email);
 
     if (typeof validateEmail === 'string') {
-      return new HttpException(validateEmail, HttpStatus.BAD_REQUEST);
+      throw new HttpException(validateEmail, HttpStatus.BAD_REQUEST);
     }
 
     const validatePassword = !isOauth
@@ -70,7 +70,7 @@ export class AuthService {
       : 'Password@2012';
 
     if (typeof validatePassword === 'string' && !isOauth) {
-      return new HttpException(validatePassword, HttpStatus.BAD_REQUEST);
+      throw new HttpException(validatePassword, HttpStatus.BAD_REQUEST);
     }
 
     const hashedPassword = await this.hashPassword(password!);
@@ -84,13 +84,12 @@ export class AuthService {
         },
       });
 
-      // const { password, ...user } = await this.userRepository.save(createUser);
       const payload: JWTPayload = {
         userId: user.id,
         email: user.email,
         role: ['user'],
-        firstname: user.firstname!,
-        lastname: user.lastname!,
+        firstname: user.first_name!,
+        lastname: user.last_name!,
       };
 
       const accessToken = await this.generateAccessToken(payload);
@@ -109,8 +108,81 @@ export class AuthService {
 
       return { user, tokens: { accessToken, refreshToken } };
     } catch (error) {
-      return new HttpException('User Creation Failed', HttpStatus.BAD_REQUEST);
+      throw new HttpException('User Creation Failed', HttpStatus.BAD_REQUEST);
     }
+  }
+
+  async refreshTokens(refreshToken: string) {
+    const securityConfig = this.configService.get<SecurityConfig>('security')!;
+    try {
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: securityConfig.refreshSecret,
+      });
+
+      const user = await this.prismaService.user.findUnique({
+        where: { id: payload.userId },
+      });
+
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      const jwtPayload = {
+        userId: user.id,
+        email: user.email,
+        role: ['user'],
+        firstname: user.first_name!,
+        lastname: user.last_name!,
+      };
+
+      const accessToken = await this.generateAccessToken(jwtPayload);
+      const newRefreshToken = await this.generateRefreshToken(jwtPayload);
+
+      return { accessToken, newRefreshToken };
+    } catch (error) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  async changePassword(email: string, otp: string, newPassword: string) {
+    const user = await this.validateUser(email);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+
+    const hashedOTP = await compare(otp, user.otp_secret!);
+    if (!hashedOTP) {
+      throw new HttpException('Invalid OTP', HttpStatus.BAD_REQUEST);
+    }
+
+    await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        password: await this.hashPassword(newPassword),
+        otp_secret: null,
+      },
+    });
+    //TODO: Send an event to notify the user that the password has been changed via email
+  }
+
+  async forgotPasswordRequest(email: string) {
+    const user = await this.validateUser(email);
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+    const otp = await this.generateOTP();
+    const hashedOTP = await this.hashOTP(otp);
+    await this.prismaService.user.update({
+      where: {
+        email,
+      },
+      data: {
+        otp_secret: hashedOTP,
+      },
+    });
+    //TODO: Now emitte the event to send the OTP to the user
   }
 
   async validateUser(email: string) {
@@ -170,5 +242,17 @@ export class AuthService {
       return 'Invalid email';
     }
     return true;
+  }
+  private async generateOTP() {
+    return Math.random().toString(36).substring(2, 8);
+  }
+  private async hashOTP(otp: string) {
+    const securityConfig = this.configService.get<SecurityConfig>('security')!;
+    const salt = securityConfig.bcryptSaltOrRound;
+    const hashedOTP = await hash(otp, salt);
+    if (!hashedOTP) {
+      throw new HttpException('OTP not hashed', HttpStatus.BAD_REQUEST);
+    }
+    return hashedOTP;
   }
 }
