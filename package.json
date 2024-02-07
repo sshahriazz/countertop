@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev:web": "pnpm run --filter=web dev",
-    "dev:server": "pnpm run --filter=server dev"
+    "dev:server": "pnpm run --filter=server dev",
+    "prisma:server": "pnpm run --filter=server prisma:generate",
+    "studio": "pnpm run --filter=server prisma:studio"
   },
   "keywords": [],
   "author": "",
