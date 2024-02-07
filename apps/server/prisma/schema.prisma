@@ -10,6 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  MANAGER
+  TEMPLATER
+  DRAFTER
+  SLAB_LAYOUT
+  SAW_OPERATOR
+  CNC_OPERATOR
+  FABRICATOR
+  INSTALLER
+  MATERIAL
+  DEALER
+  ACCOUNTING
+  CUSTOMIZE
+  USER
+}
+
 model User {
   id             String  @id @default(cuid())
   email          String  @unique
@@ -17,33 +33,82 @@ model User {
   first_name     String? @default("")
   last_name      String? @default("")
   password       String
+  role           Role[]  @default([USER])
+  address        String?
   email_verified Boolean @default(false)
   is2fa          Boolean @default(false)
   disable_access Boolean @default(false)
   otp_secret     String?
 
+  avatar         String?   @default("")
+  Per_hour       Int?      @default(0)
+  monthly_salary Int?      @default(0)
+  use_Pay_clock  Boolean?  @default(false)
+  work_start     String?   @default("")
+  work_end       String?   @default("")
+  show_in_kiosk  String?   @default("")
+  hire_date      DateTime?
+  terminate_date DateTime?
+  rating         Int?      @default(0)
+
+  shops      Shop[]
+  cart_items Cart[]
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
-// schema.prisma
-
-// Define Role model
-model Role {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  createdAt DateTime @default(now())
-
-  // Define RolePermissions relation to represent role's permissions
+model Shop {
+  id            String             @id @default(cuid())
+  name          String
+  address       String
+  phone         String
+  email         String
+  website       String?
+  logo          String?
+  products      Product[]
+  categories    Product_Category[]
+  created_at    DateTime           @default(now())
+  updated_at    DateTime           @updatedAt
+  shop_owner    User?              @relation(fields: [shop_owner_id], references: [id])
+  shop_owner_id String?
 }
 
-// Define UserRole model to represent user's assigned roles
+model Product_Category {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  products    Product[]
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  shop        Shop?     @relation(fields: [shopId], references: [id])
+  shopId      String?
+}
 
-// Example seed data for resources
-// Add your resources (Blog, Comments, Post, Product, etc.) as needed
-// Example:
-// model Resource {
-//   id   Int    @id @default(autoincrement())
-//   name String @unique
-//   users User[]
-// }
+model Product {
+  id                  String            @id @default(cuid())
+  name                String
+  description         String?
+  price               Float
+  image               String?
+  in_stock            Int               @default(0)
+  is_Sold_out         Boolean           @default(false)
+  created_at          DateTime          @default(now())
+  updated_at          DateTime          @updatedAt
+  shop                Shop              @relation(fields: [shop_id], references: [id])
+  shop_id             String
+  Product_Category    Product_Category? @relation(fields: [product_Category_id], references: [id])
+  product_Category_id String?
+
+  cart    Cart?   @relation(fields: [cart_id], references: [id])
+  cart_id String?
+}
+
+model Cart {
+  id         String    @id @default(cuid())
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+  products   Product[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+}

@@ -1,16 +1,29 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpException,
   Post,
   Query,
+  Req,
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import {
+  LoginDto,
+  RegisterDto,
+  ChangePasswordDto,
+  LoginResponseDto,
+} from './dto/auth.dto';
+import {
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Response, Request } from 'express';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -22,6 +35,10 @@ export class AuthController {
     summary: 'User Registration',
   })
   @ApiBody({ type: RegisterDto, description: 'User Registration Details' })
+  @ApiResponse({
+    type: LoginResponseDto,
+    description: 'User Registration Response',
+  })
   @ApiQuery({
     name: 'isCookie',
     required: false,
@@ -44,19 +61,17 @@ export class AuthController {
       loginDto.password,
     );
 
-    if (!(authState instanceof HttpException)) {
-      if (isCookie === 'true') {
-        res.cookie('accessToken', authState.tokens.accessToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'none',
-        });
-        res.cookie('refreshToken', authState.tokens.refreshToken, {
-          httpOnly: true,
-          secure: true,
-          sameSite: 'none',
-        });
-      }
+    if (isCookie === 'true') {
+      res.cookie('accessToken', authState.tokens.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
+      res.cookie('refreshToken', authState.tokens.refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
     }
 
     return authState;
@@ -98,5 +113,57 @@ export class AuthController {
       }
     }
     return authState;
+  }
+
+  @Get('refresh-token')
+  @ApiOperation({
+    summary: 'RefreshTokens',
+  })
+  @ApiQuery({
+    name: 'rt',
+    required: false,
+    description: 'Refresh Token',
+  })
+  async refreshToken(@Req() req: Request, @Query('rt') rt: string) {
+    const cookies = req.headers['cookie'];
+
+    if (!cookies) {
+      return await this.authService.refreshTokens(rt);
+    }
+    const refreshToken = cookies.split('refreshToken=')[1].split(';')[0];
+
+    return await this.authService.refreshTokens(refreshToken);
+  }
+
+  @Get('request-reset-password')
+  @ApiOperation({
+    summary: 'Request Password Reset',
+  })
+  @ApiQuery({
+    name: 'email',
+    required: true,
+    description: 'Email Address',
+  })
+  async requestResetPassword(@Query('email') email: string) {
+    return await this.authService.forgotPasswordRequest(email);
+  }
+
+  @Post('change-password')
+  @ApiOperation({
+    summary: 'Change Password',
+  })
+  @ApiBody({
+    type: ChangePasswordDto,
+    description: 'New Password',
+  })
+  async changePassword(
+    @Body()
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    return await this.authService.changePassword(
+      changePasswordDto.email,
+      changePasswordDto.otp,
+      changePasswordDto.newPassword,
+    );
   }
 }

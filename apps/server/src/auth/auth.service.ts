@@ -165,6 +165,7 @@ export class AuthService {
       },
     });
     //TODO: Send an event to notify the user that the password has been changed via email
+    return { message: 'Password changed successfully' };
   }
 
   async forgotPasswordRequest(email: string) {
@@ -182,7 +183,7 @@ export class AuthService {
         otp_secret: hashedOTP,
       },
     });
-    //TODO: Now emitte the event to send the OTP to the user
+    //TODO: Now emit the event to send the OTP to the user
   }
 
   async validateUser(email: string) {
