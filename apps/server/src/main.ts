@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import * as compression from 'compression';
 import * as session from 'express-session';
 import * as cookieParser from 'cookie-parser';
+import * as fs from 'fs';
 import {
   NestConfig,
   CorsConfig,
@@ -54,11 +55,14 @@ async function bootstrap() {
       .setTitle(swaggerConfig.title)
       .setDescription(swaggerConfig.description)
       .setVersion(swaggerConfig.version)
-      // .addServer('/api')
+      .addServer(`http://localhost:${nestConfig.port}/`, 'Local environment')
+      .addServer('https://staging.yourapi.com/', 'Staging')
+      .addServer('https://production.yourapi.com/', 'Production')
       .addBearerAuth()
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
+    fs.writeFileSync('./swagger-spec.json', JSON.stringify(document));
     SwaggerModule.setup(swaggerConfig.path, app, document);
   }
 

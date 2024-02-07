@@ -1,36 +1,49 @@
-import { Module } from '@nestjs/common';
+import { HttpStatus, Logger, Module } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD, HttpAdapterHost } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import config from '@server/common/configs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { DbConfig } from './common/configs/config.interface';
-import { TypeOrmExceptionFilter } from './common/filters/TypeOrmExceptionFilter';
+
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { EmailModule } from './email/email.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TypedEventEmitterModule } from './event-emitter/typed-event-emitter.module';
+import {
+  PrismaClientExceptionFilter,
+  PrismaModule,
+  QueryInfo,
+  loggingMiddleware,
+} from 'nestjs-prisma';
 
 @Module({
   imports: [
-    TypeOrmModule.forRootAsync({
-      useFactory: (configService: ConfigService) => {
-        const config = configService.get<DbConfig>('db')!;
-        return {
-          type: 'mysql',
-          host: config.host,
-          port: config.port,
-          username: config.username,
-          password: config.password,
-          database: config.database,
-          autoLoadEntities: true,
-          synchronize: true,
-          entities: ['dist/**/*.entity{.ts,.js}'],
-        };
+    PrismaModule.forRoot({
+      isGlobal: true,
+      prismaServiceOptions: {
+        middlewares: [
+          loggingMiddleware({
+            logger: new Logger('PrismaMiddleware'),
+            logLevel: 'log', // default is `debug`
+            logMessage: (query: QueryInfo) =>
+              `[Prisma Query] ${query.model}.${query.action} - ${query.executionTime}ms`,
+          }),
+        ],
+        explicitConnect: true,
+        prismaOptions: {
+          log: [
+            {
+              emit: 'event',
+              level: 'query',
+            },
+          ],
+        },
       },
-      inject: [ConfigService],
     }),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+      envFilePath: ['.env'],
     }),
     ThrottlerModule.forRoot([
       {
@@ -40,12 +53,24 @@ import { AuthModule } from './auth/auth.module';
     ]),
     UserModule,
     AuthModule,
+    EmailModule,
+    TypedEventEmitterModule,
+    EventEmitterModule.forRoot(),
   ],
   providers: [
     {
       provide: APP_FILTER,
-      useClass: TypeOrmExceptionFilter,
+      useFactory: ({ httpAdapter }: HttpAdapterHost) => {
+        return new PrismaClientExceptionFilter(httpAdapter, {
+          // Prisma Error Code: HTTP Status Response
+          P2000: HttpStatus.BAD_REQUEST,
+          P2002: HttpStatus.CONFLICT,
+          P2025: HttpStatus.NOT_FOUND,
+        });
+      },
+      inject: [HttpAdapterHost],
     },
+
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
