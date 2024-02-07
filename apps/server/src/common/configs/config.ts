@@ -20,7 +20,7 @@ const config: Config = {
   db: {
     database: 'counter-top-dev',
     host: 'localhost',
-    password: 'polash1234',
+    password: '',
     port: 3306,
     type: 'mysql',
     username: 'root',
