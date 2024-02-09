@@ -25,3 +25,19 @@ export class UserDto implements Partial<User> {
   @ApiProperty({ type: Date })
   updated_at: Date;
 }
+export class MetaData {
+  totalUsers: number;
+  itemsPerPage: number;
+  currentPage: number;
+  totalPages: number;
+  nextCursor: string;
+  previousCursor: string | null;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+export class PaginatedDto {
+  @ApiProperty({ type: [UserDto] })
+  users: UserDto[];
+  @ApiProperty({ type: MetaData })
+  metaData: MetaData;
+}
