@@ -15,6 +15,8 @@ import {
   QueryInfo,
   loggingMiddleware,
 } from 'nestjs-prisma';
+import { JwtAuthGuard } from './common/decorators/jwt.guard';
+import { RoleGuard } from './common/decorators/role.guard';
 
 @Module({
   imports: [
@@ -70,7 +72,14 @@ import {
       },
       inject: [HttpAdapterHost],
     },
-
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RoleGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

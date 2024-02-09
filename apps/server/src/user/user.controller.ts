@@ -1,11 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('user')
 @ApiTags('user')
+@ApiBearerAuth()
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
