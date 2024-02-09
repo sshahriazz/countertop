@@ -24,6 +24,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response, Request } from 'express';
+import { IsPublic } from '@server/common/metadata/public.decorator';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -49,6 +50,7 @@ export class AuthController {
     required: false,
     description: 'true/false',
   })
+  @IsPublic()
   async register(
     @Body() loginDto: RegisterDto,
     @Query('isCookie') isCookie: string = 'false',
@@ -88,6 +90,7 @@ export class AuthController {
     required: false,
     description: 'true/false',
   })
+  @IsPublic()
   async login(
     @Body() loginDto: LoginDto,
     @Query('isCookie') isCookie: string = 'false',
@@ -116,6 +119,7 @@ export class AuthController {
   }
 
   @Get('refresh-token')
+  @IsPublic()
   @ApiOperation({
     summary: 'RefreshTokens',
   })
@@ -136,6 +140,7 @@ export class AuthController {
   }
 
   @Get('request-reset-password')
+  @IsPublic()
   @ApiOperation({
     summary: 'Request Password Reset',
   })
@@ -149,6 +154,7 @@ export class AuthController {
   }
 
   @Post('change-password')
+  @IsPublic()
   @ApiOperation({
     summary: 'Change Password',
   })
