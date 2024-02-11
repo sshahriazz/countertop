@@ -123,7 +123,7 @@
         "foreground": "#000000",
         "primary": {
           "DEFAULT": "#32C072",
-          "100": "#ECF9F2",
+          "blue-main": "#618BB6",
           "200": "#BBEAD0",
           "300": "#98DFB8",
           "400": "#76D5A1",
@@ -170,7 +170,7 @@
         },
         "neutral": {
           "DEFAULT": "#212121",
-          "100": "#FFFFFF",
+          "white": "#FFFFFF",
           "200": "#F5F5F5",
           "300": "#EEEEEE",
           "400": "#E0E0E0",
