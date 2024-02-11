@@ -29,6 +29,19 @@ export class UserService {
   async findUser(id: string): Promise<UserResponseDto> {
     const user = await this.prismaService.user.findUnique({
       where: { id: id },
+      select: {
+        id: true,
+        email: true,
+        phone: true,
+        first_name: true,
+        last_name: true,
+        email_verified: true,
+        is2fa: true,
+        disable_access: true,
+        otp_secret: true,
+        created_at: true,
+        updated_at: true,
+      },
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -37,45 +50,45 @@ export class UserService {
   }
 
   async listUsers(
-    cursor: Prisma.UserWhereUniqueInput,
     take: number,
-    skip: number,
-    orderBy: Prisma.UserOrderByWithRelationInput,
+    cursor: string | null,
+    searchString: string | null,
   ) {
-    // Validate take and skip
-    if (take < 1) throw new Error('Take must be positive.');
-    if (skip < 0) throw new Error('Skip must be non-negative.');
-
-    const totalUsers = await this.prismaService.user.count();
-    if (skip >= totalUsers)
-      throw new Error('Skip is greater than the total number of users.');
-    if (take > totalUsers)
-      throw new Error('Take is greater than the total number of users.');
-
     const users = await this.prismaService.user.findMany({
-      cursor,
-      take,
-      orderBy,
-      skip,
+      take: Number.isNaN(take) ? 10 : take,
+      cursor: cursor ? { id: cursor } : undefined,
+      select: {
+        id: true,
+        email: true,
+        phone: true,
+        first_name: true,
+        last_name: true,
+        email_verified: true,
+        is2fa: true,
+        disable_access: true,
+        otp_secret: true,
+        created_at: true,
+        updated_at: true,
+      },
+      where: {
+        OR: searchString
+          ? [
+              {
+                first_name: {
+                  contains: searchString,
+                },
+              },
+              {
+                last_name: {
+                  contains: searchString,
+                },
+              },
+              { email: { contains: searchString } },
+            ]
+          : undefined,
+      },
     });
 
-    const currentPage = Math.floor(skip / take) + 1;
-    const totalPages = Math.ceil(totalUsers / take);
-
-    const metaData = {
-      totalUsers,
-      itemsPerPage: take,
-      currentPage,
-      totalPages,
-      nextCursor: users[users.length - 1]?.id,
-      previousCursor: currentPage > 1 ? users[0]?.id : null,
-      hasNextPage: totalPages > currentPage,
-      hasPreviousPage: currentPage > 1,
-    };
-
-    return {
-      users,
-      metaData,
-    };
+    return users;
   }
 }
