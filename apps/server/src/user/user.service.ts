@@ -1,40 +1,94 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { UserEntity } from './entities/user.entity';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from 'nestjs-prisma';
 import { UserResponseDto } from './dto/user-response.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async updateUser(user: UpdateUserDto) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = await this.userRepository.save(user);
-    return rest;
+  async updateUser(
+    userId: string,
+    user: Prisma.UserUpdateInput,
+  ): Promise<UserResponseDto | null> {
+    return await this.prismaService.user.update({
+      where: { id: userId },
+      data: user,
+    });
   }
   async deleteUser(id: string) {
-    const user = this.userRepository.findOne({ where: { id } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    await this.userRepository.delete(id);
-
-    return this.userRepository.delete(id);
+    return await this.prismaService.user.delete({ where: { id: id } });
   }
 
   async findUser(id: string): Promise<UserResponseDto> {
-    const user = await this.userRepository.findOne({ where: { id } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: id },
+      select: {
+        id: true,
+        email: true,
+        phone: true,
+        first_name: true,
+        last_name: true,
+        email_verified: true,
+        is2fa: true,
+        disable_access: true,
+        otp_secret: true,
+        created_at: true,
+        updated_at: true,
+      },
+    });
     if (!user) {
       throw new NotFoundException('User not found');
     }
     return user;
   }
-  listUsers() {
-    // TODO: Implement it using nest paginate
+
+  async listUsers(
+    take: number,
+    cursor: string | null,
+    searchString: string | null,
+  ) {
+    const users = await this.prismaService.user.findMany({
+      take: Number.isNaN(take) ? 10 : take,
+      cursor: cursor ? { id: cursor } : undefined,
+      select: {
+        id: true,
+        email: true,
+        phone: true,
+        first_name: true,
+        last_name: true,
+        email_verified: true,
+        is2fa: true,
+        disable_access: true,
+        otp_secret: true,
+        created_at: true,
+        updated_at: true,
+      },
+      where: {
+        OR: searchString
+          ? [
+              {
+                first_name: {
+                  contains: searchString,
+                },
+              },
+              {
+                last_name: {
+                  contains: searchString,
+                },
+              },
+              { email: { contains: searchString } },
+            ]
+          : undefined,
+      },
+    });
+
+    return users;
   }
 }
