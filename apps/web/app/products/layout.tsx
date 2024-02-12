@@ -4,8 +4,8 @@ export default function ProductLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<section>
+		<div className="max-w-[1440px] mx-auto">
 			{children}
-		</section>
+		</div>
 	);
 }
