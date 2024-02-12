@@ -9,7 +9,7 @@ import {
   NavbarMenuItem,
 } from "@nextui-org/navbar";
 import Image from "next/image";
-import { Link } from "@nextui-org/link";
+// import { Link } from "@nextui-org/link";
 import { siteConfig } from "@web/config/site";
 // import BagIcon from '@web/public/assets/icons/bag'
 // import SearchIcon from '@web/public/assets/icons/search'
@@ -26,8 +26,12 @@ import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/popover";
 import SearchIcon from "./icons/Search";
 import BagIcon from "./icons/Bag";
 import { Button } from "@nextui-org/button";
+import { useState } from "react";
+import Link from "next/link";
 
 export const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <NextUINavbar
       maxWidth="xl"
@@ -53,23 +57,48 @@ export const Navbar = () => {
         {siteConfig.navItems.map((item: any, index: any) => (
           <NavbarItem key={index} className="text-neutral-300">
             {item.label == "Products" ? (
-              <Popover shouldFlip radius="none" placement="bottom" classNames={{
-				base:"py-2 flex justif-start items-center",
-				content:"flex items-center justify-start w-screen"
-				
-			  }}>
+              <Popover
+                isOpen={isOpen}
+                onOpenChange={(open) => setIsOpen(open)}
+                radius="none"
+                placement="bottom"
+                classNames={{
+                  base: "flex justif-start items-center",
+                  content: "flex items-center justify-start w-screen",
+                  trigger: "transition ease-out duration-300",
+                }}
+              >
                 <PopoverTrigger>
-                  <p className="text-xs-medium px-4 cursor-pointer">
+                  <p className="text-xs-medium px-4 pt-1 cursor-pointer">
                     {item.label}
                   </p>
                 </PopoverTrigger>
                 <PopoverContent
                   aria-label="ACME features"
-                  className=" bg-grey-800"
+                  className=" bg-black flex flex-col justify-start items-start gap-y-4 pt-6 pb-10 sm:pl-[450px] sm:ml-[-10px] transition ease-out duration-300"
                 >
-                  <Link href="/products" className="text-neutral-white font-bold text-xl">Porcelain</Link>
-				  <Link href="/products" className="text-neutral-white font-bold text-xl">Porcelain</Link>
-                  <Link href="/products" className="text-neutral-white font-bold text-xl">Porcelain</Link>
+                  <p className="text-neutral-white opacity-60">Product</p>
+                  <Link
+                    href="/products"
+                    className="text-neutral-white opacity-90 font-medium text-xl"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Porcelain
+                  </Link>
+                  <Link
+                    href="/products"
+                    className="text-neutral-white opacity-90 font-medium text-xl"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sintered stone
+                  </Link>
+                  <Link
+                    href="/products"
+                    className="text-white text-h5-semibold opacity-90 font-bold"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Quartz
+                  </Link>
                 </PopoverContent>
               </Popover>
             ) : (
@@ -105,11 +134,10 @@ export const Navbar = () => {
           <DropdownMenu
             aria-label="Profile Actions"
             variant="flat"
-            className="p-2 bg-neutral-400 rounded-small shadow-sm w-[100px]"
+            className="p-2 rounded-small shadow-sm"
           >
             <DropdownItem
               key="profile"
-              color="danger"
               className="text-neutral mb-2.5 outline-none hover:bg-neutral-500 hover:rounded-md"
               as={Link}
               href=""
@@ -118,7 +146,6 @@ export const Navbar = () => {
             </DropdownItem>
             <DropdownItem
               key="settings"
-              color="danger"
               className="text-neutral mb-2.5 outline-none hover:bg-neutral-500 hover:rounded-md"
               as={Link}
               href=""
@@ -127,7 +154,6 @@ export const Navbar = () => {
             </DropdownItem>
             <DropdownItem
               key="logout"
-              color="danger"
               className="text-neutral outline-none hover:bg-neutral-500 hover:rounded-md"
               as={Link}
               href=""
@@ -140,14 +166,14 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <ThemeSwitch />
-        <NavbarMenuToggle className="text-neutral-100" />
+        <NavbarMenuToggle className="text-neutral-white opacity-90" />
       </NavbarContent>
 
       <NavbarMenu>
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {siteConfig.navItems.map((item, index) => (
             <NavbarMenuItem key={`${item}-${index}`}>
-              <Link href={item.href} size="lg" className="text-neutral-800">
+              <Link href={item.href} className="text-neutral-800">
                 {item.label}
               </Link>
             </NavbarMenuItem>

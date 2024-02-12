@@ -19,7 +19,7 @@ const page = () => {
             <ProductCollectionFilter />
           </div>
           <div className="sm:hidden flex justify-between items-center py-6">
-            <h1 className="text-h5-semibold flex justify-start sm:justify-center items-center">
+            <h1 className="text-h5-semibold  flex justify-start sm:justify-center items-center">
               Quartz 3 cm
             </h1>
             <div className="flex gap-0 items-center">
@@ -40,7 +40,9 @@ const page = () => {
           <p className="text-h2-semibold justify-center sm:justify-center items-center hidden sm:flex">
             Quartz 3 cm
           </p>
+          <div className="mt-12">
           <ProductBrand />
+          </div>
           <BrandOverview />
         </div>
       </div>

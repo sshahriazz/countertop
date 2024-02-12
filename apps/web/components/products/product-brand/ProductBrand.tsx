@@ -23,7 +23,7 @@ const ProductBrand = () => {
     },
   ];
   return (
-    <div className="mt-12">
+    <div>
       <p className="flex justify-center items-center text-h4-semibold">Brand</p>
       <RadioGroup
         color="primary"

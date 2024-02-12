@@ -1,6 +1,6 @@
 {
     "fontFamily": {
-      "sf": ["SF Pro Display","sans-serif"]
+      "sf-pro-display": ["SF Pro Display", "Arial", "sans-serif"]
     },
     "fontSize": {
        "xs-medium": ["0.75rem", {

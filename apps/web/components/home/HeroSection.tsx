@@ -9,6 +9,12 @@ const HeroSection = ({ item }: any) => {
     "About",
     "Contact",
   ];
+
+  const mobilefooterItems = [
+    "AbsoluteGM @ 2024",
+    "Privacy & Legal",
+  ];
+
   return (
     <section className="relative">
       {item.img ? (
@@ -42,7 +48,7 @@ const HeroSection = ({ item }: any) => {
       )}
       <div className="absolute inset-0 items-center flex flex-col justify-between top-12 bottom-[86px]">
         <div className="text-center items-center">
-          <p className="text-[28px] leading-[34px] lg:text-h1-bold sm:mb-5 text-[#F5F5F7] dark:text-[#F5F5F7]">
+          <p className="text-[28px] leading-[34px] font-bold font-sf-pro-display lg:text-h1-bold sm:mb-5 text-[#F5F5F7] dark:text-[#F5F5F7]">
             {item.title}
           </p>
           <p className="font-normal text-center text-[15px] md:text-h4-regular text-[#F5F5F7] ">
@@ -58,11 +64,22 @@ const HeroSection = ({ item }: any) => {
               {item.btn2}
             </Button>
           </div>
-          <div className="items-center flex">
+          <div className="items-center hidden sm:flex">
             {item.footer ? (
               <div className="text-xs-regular text-white flex justify-start gap-x-4">
                 {footerItems.map((element, index) => (
                   <p key={element + index} className="md:px-4 md:py-3">{element}</p>
+                ))}
+              </div>
+            ) : (
+              ""
+            )}{" "}
+          </div>
+          <div className="items-center flex sm:hidden ">
+            {item.footer ? (
+              <div className="text-xs-regular text-white flex justify-center gap-x-2 mt-2 w-[247px]">
+                {mobilefooterItems.map((element, index) => (
+                  <p key={element + index} className="md:px-3 md:py-2 text-neutral-white opacity-70">{element}</p>
                 ))}
               </div>
             ) : (
